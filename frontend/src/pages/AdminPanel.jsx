@@ -8,18 +8,11 @@ import DueSoonTable from "../components/admin/DueSoonTable";
 import Tabs from "../components/common/Tabs";
 
 const AdminPanel = () => {
-  const { isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  if (!isAdmin) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
-        <p className="text-gray-600">
-          You need administrator privileges to access this page.
-        </p>
-      </div>
-    );
+  if (!isAuthenticated || !isAdmin) {
+    return null; // The ProtectedRoute in App.jsx will handle redirection
   }
 
   const handleBookAdded = () => {
@@ -51,6 +44,7 @@ const AdminPanel = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Admin Panel</h1>
       <Tabs tabs={tabs} />
     </div>
   );

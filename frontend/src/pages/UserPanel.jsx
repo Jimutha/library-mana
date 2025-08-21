@@ -6,22 +6,15 @@ import BookBrowser from "../components/user/BookBrowser";
 import BookDetails from "../components/user/BookDetails";
 
 const UserPanel = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const [currentView, setCurrentView] = useState("language");
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBook, setSelectedBook] = useState(null);
   const [borrowSuccess, setBorrowSuccess] = useState(false);
 
-  if (!isAuthenticated) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-red-600">Please Sign In</h1>
-        <p className="text-gray-600">
-          You need to be logged in to access this page.
-        </p>
-      </div>
-    );
+  if (!isAuthenticated || isAdmin) {
+    return null; // The ProtectedRoute in App.jsx will handle redirection
   }
 
   const handleLanguageSelect = (language) => {

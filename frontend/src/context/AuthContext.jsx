@@ -1,43 +1,65 @@
-import { createContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import * as authService from "../services/auth";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import api from "../services/api";
 
 const AuthContext = createContext();
 
+export const useAuth = () => useContext(AuthContext);
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null); // store logged-in user info
+  const [loading, setLoading] = useState(true); // track auth check
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const fetchUser = async () => {
       try {
-        const response = await authService.me();
-        setUser(response.data);
+        const res = await api.get("/auth/me");
+        setUser(res.data.user);
       } catch (err) {
         setUser(null);
+      } finally {
+        setLoading(false);
       }
     };
-    checkAuth();
+    fetchUser();
   }, []);
 
-  const login = async (credentials) => {
-    const response = await authService.login(credentials);
-    setUser(response.data);
-    localStorage.setItem("token", response.data.token);
-    navigate(response.data.role === "admin" ? "/admin" : "/user");
+  const login = async (email, password) => {
+    try {
+      const res = await api.post("/auth/login", { email, password });
+      localStorage.setItem("token", res.data.token);
+      setUser(res.data.user);
+      setError(null);
+      return true;
+    } catch (err) {
+      setError("Invalid credentials");
+      return false;
+    }
+  };
+
+  const register = async (formData) => {
+    try {
+      const res = await api.post("/auth/register", formData);
+      localStorage.setItem("token", res.data.token);
+      setUser(res.data.user);
+      setError(null);
+      return true;
+    } catch (err) {
+      setError("Registration failed");
+      return false;
+    }
   };
 
   const logout = () => {
-    setUser(null);
     localStorage.removeItem("token");
-    navigate("/");
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, error, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
-
-export default AuthContext;

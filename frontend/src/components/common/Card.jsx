@@ -1,8 +1,10 @@
-// frontend/src/components/common/Card.jsx
-function Card({ children, className = "" }) {
+import React from "react";
+
+export default function Card({ title, children }) {
   return (
-    <div className={`p-4 border rounded shadow ${className}`}>{children}</div>
+    <div className="bg-white shadow rounded p-4">
+      <h3 className="font-bold text-lg mb-2">{title}</h3>
+      <div>{children}</div>
+    </div>
   );
 }
-
-export default Card;

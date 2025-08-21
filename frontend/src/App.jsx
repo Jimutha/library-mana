@@ -1,44 +1,44 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./hooks/useAuth";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+
+// Pages
 import Home from "./pages/Home";
 import AdminPanel from "./pages/AdminPanel";
 import UserPanel from "./pages/UserPanel";
 import BookDetailsPage from "./pages/BookDetailsPage";
 import NotFound from "./pages/NotFound";
+
+// Components
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
-import { AuthProvider } from "./context/AuthContext";
 
-function App() {
-  const { user } = useAuth();
+// Private route wrapper
+import PrivateRoute from "./components/common/PrivateRoute";
 
+export default function App() {
   return (
     <AuthProvider>
-      <div className="min-h-screen flex flex-col">
+      <Router>
         <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/admin"
-              element={
-                user?.role === "admin" ? <AdminPanel /> : <Navigate to="/" />
-              }
-            />
-            <Route
-              path="/user"
-              element={
-                user?.role === "user" ? <UserPanel /> : <Navigate to="/" />
-              }
-            />
-            <Route path="/books/:id" element={<BookDetailsPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          {/* Admin protected routes */}
+          <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin" element={<AdminPanel />} />
+          </Route>
+
+          {/* User protected routes */}
+          <Route element={<PrivateRoute allowedRoles={["user"]} />}>
+            <Route path="/user" element={<UserPanel />} />
+            <Route path="/book/:id" element={<BookDetailsPage />} />
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
         <Footer />
-      </div>
+      </Router>
     </AuthProvider>
   );
 }
-
-export default App;

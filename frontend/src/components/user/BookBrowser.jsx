@@ -1,53 +1,46 @@
-// frontend/src/components/user/BookBrowser.jsx
-import { useEffect, useState } from "react";
-import { getBooks } from "../../services/api";
-import { useNavigate } from "react-router-dom";
-import Card from "../common/Card";
+import React, { useEffect, useState } from "react";
+import api from "../../services/api";
+import Pagination from "../common/Pagination";
 
-function BookBrowser({ language, category, onBack }) {
+export default function BookBrowser({ language, category, onSelectBook }) {
   const [books, setBooks] = useState([]);
-  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      const response = await getBooks({
-        language,
-        category,
-        status: "available",
-      });
-      setBooks(response.data.items);
-    };
+    async function fetchBooks() {
+      try {
+        const { data } = await api.get(
+          `/books?language=${language}&category=${category}&page=${page}`
+        );
+        setBooks(data.books);
+        setTotalPages(data.totalPages);
+      } catch (err) {
+        console.error("Failed to fetch books", err);
+      }
+    }
     fetchBooks();
-  }, [language, category]);
-
-  const handleSelect = (id) => {
-    navigate(`/books/${id}`);
-  };
+  }, [language, category, page]);
 
   return (
     <div>
-      <button
-        onClick={onBack}
-        className="mb-4 bg-gray-500 text-white px-4 py-2 rounded"
-      >
-        Back
-      </button>
+      <h2 className="text-xl font-bold mb-4">
+        Books in {category} ({language})
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {books.map((book) => (
-          <Card key={book._id}>
+          <div
+            key={book._id}
+            className="border rounded p-3 shadow cursor-pointer hover:bg-gray-100"
+            onClick={() => onSelectBook(book)}
+          >
             <h3 className="font-bold">{book.title}</h3>
-            <p>Author: {book.author}</p>
-            <button
-              onClick={() => handleSelect(book._id)}
-              className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
-            >
-              View More
-            </button>
-          </Card>
+            <p className="text-sm text-gray-600">{book.author}</p>
+          </div>
         ))}
       </div>
+
+      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
     </div>
   );
 }
-
-export default BookBrowser;

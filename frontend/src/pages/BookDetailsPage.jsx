@@ -1,28 +1,20 @@
-// frontend/src/pages/BookDetailsPage.jsx
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getBook } from "../../services/api";
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import BookDetails from "../components/user/BookDetails";
+import { useAuth } from "../context/AuthContext";
 
-function BookDetailsPage() {
-  const { id } = useParams();
-  const [book, setBook] = useState(null);
+export default function BookDetailsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const book = location.state?.book;
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      const response = await getBook(id);
-      setBook(response.data);
-    };
-    fetchBook();
-  }, [id]);
+  if (!book) {
+    navigate("/user/home");
+    return null;
+  }
 
-  const handleBack = () => {
-    window.history.back();
-  };
-
-  if (!book) return <div>Loading...</div>;
-
-  return <BookDetails book={book} onBack={handleBack} />;
+  return (
+    <BookDetails book={book} memberId={user._id} onBack={() => navigate(-1)} />
+  );
 }
-
-export default BookDetailsPage;

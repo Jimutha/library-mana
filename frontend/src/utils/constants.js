@@ -1,13 +1,17 @@
+// constants.js
+
 export const LANGUAGES = ["Sinhala", "English", "Other"];
-export const CATEGORIES = [
-  "adventure",
-  "science fiction",
-  "novel",
-  "mystery",
-  "fantasy",
-  "comedy",
-  "education",
-  "kids",
-  "other",
+
+export const GENRES = [
+  "Adventure",
+  "Science Fiction",
+  "Novel",
+  "Mystery",
+  "Fantasy",
+  "Comedy",
+  "Education",
+  "Kids",
+  "Other",
 ];
-export const DURATIONS = [7, 14, 21];
+
+export const BORROW_DAYS = [7, 14, 21];

@@ -1,19 +1,19 @@
-import { LANGUAGES } from "../../utils/constants";
+import React from "react";
 
-function LanguageSelector({ onSelect }) {
+export default function LanguageSelector({ languages, selected, setSelected }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {LANGUAGES.map((language) => (
-        <div
-          key={language}
-          onClick={() => onSelect(language)}
-          className="p-4 border rounded text-center cursor-pointer hover:bg-blue-100"
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      {languages.map((lang) => (
+        <button
+          key={lang}
+          className={`p-3 rounded border ${
+            selected === lang ? "bg-blue-600 text-white" : "bg-gray-100"
+          }`}
+          onClick={() => setSelected(lang)}
         >
-          <h3 className="text-xl font-semibold">{language}</h3>
-        </div>
+          {lang}
+        </button>
       ))}
     </div>
   );
 }
-
-export default LanguageSelector;

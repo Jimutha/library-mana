@@ -1,12 +1,9 @@
-// frontend/src/components/common/Footer.jsx
-function Footer() {
+import React from "react";
+
+export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white p-4 mt-auto">
-      <div className="container mx-auto text-center">
-        &copy; 2023 Library Management System
-      </div>
+    <footer className="bg-gray-800 text-white p-4 mt-6 text-center">
+      &copy; {new Date().getFullYear()} Library Management System
     </footer>
   );
 }
-
-export default Footer;

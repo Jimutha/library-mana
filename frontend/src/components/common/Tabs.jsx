@@ -1,27 +1,19 @@
-// frontend/src/components/common/Tabs.jsx
-import { useState } from "react";
+import React from "react";
 
-function Tabs({ tabs, defaultTab = 0 }) {
-  const [active, setActive] = useState(defaultTab);
-
+export default function Tabs({ tabs, activeTab, setActiveTab }) {
   return (
-    <div>
-      <div className="flex space-x-2 mb-4">
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            onClick={() => setActive(index)}
-            className={`px-4 py-2 rounded ${
-              active === index ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      {tabs[active].content}
+    <div className="flex space-x-2 mb-4">
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          className={`px-3 py-1 rounded ${
+            activeTab === tab ? "bg-blue-600 text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setActiveTab(tab)}
+        >
+          {tab}
+        </button>
+      ))}
     </div>
   );
 }
-
-export default Tabs;

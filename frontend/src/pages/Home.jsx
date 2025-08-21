@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function formatDate() {
+export default function Home() {
   return <div></div>;
 }

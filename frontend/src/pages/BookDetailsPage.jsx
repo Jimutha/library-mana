@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function api() {
+export default function BookDetailsPage() {
   return <div></div>;
 }

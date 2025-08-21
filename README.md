@@ -65,9 +65,3 @@ Built using **React + TailwindCSS (frontend)**, **Node.js + Express (backend)**,
 
 ---
 
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/yourusername/library-mana.git
-cd library-mana

@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function bookService() {
+export default function dateUtils() {
   return <div></div>;
 }

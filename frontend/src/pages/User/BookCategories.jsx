@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function BorrowConfirmation() {
+export default function BookCategories() {
   return <div></div>;
 }

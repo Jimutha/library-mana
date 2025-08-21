@@ -1,5 +1,14 @@
-import React from "react";
+import axios from "axios";
 
-export default function api() {
-  return <div></div>;
-}
+const api = axios.create({
+  baseURL: "http://localhost:5000/api",
+});
+
+// Auto-attach JWT
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export default api;

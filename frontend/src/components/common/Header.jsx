@@ -8,6 +8,7 @@ const Header = () => {
   const handleLogout = () => {
     authAPI.logout();
     contextLogout();
+    window.location.href = "/";
   };
 
   return (

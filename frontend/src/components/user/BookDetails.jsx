@@ -17,7 +17,7 @@ const BookDetails = ({ book, onBorrowSuccess, onBack }) => {
       // For this demo, we'll use a hardcoded member ID
       const memberId = "MBR-0001"; // This should come from user context
 
-      const response = await api.post("/loans", {
+      await api.post("/loans", {
         bookId: book._id,
         memberId: memberId,
         durationDays: selectedDuration,

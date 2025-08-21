@@ -1,21 +1,21 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext.jsx";
-import Header from "./components/common/Header.jsx";
-import Footer from "./components/common/Footer.jsx";
-import Home from "./pages/Home.jsx";
-import AdminPanel from "./pages/AdminPanel.jsx";
-import UserPanel from "./pages/UserPanel.jsx";
-import BookDetailsPage from "./pages/BookDetailsPage.jsx";
-import Login from "./components/auth/Login.jsx";
-import Register from "./components/auth/Register.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import { AuthProvider } from "./context/AuthContext";
+import Header from "./components/common/Header";
+import Footer from "./components/common/Footer";
+import Home from "./pages/Home";
+import AdminPanel from "./pages/AdminPanel";
+import UserPanel from "./pages/UserPanel";
+import BookDetailsPage from "./pages/BookDetailsPage";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-gray-50">
           <Header />
           <main className="flex-grow">
             <Routes>

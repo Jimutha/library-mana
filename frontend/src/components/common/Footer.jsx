@@ -1,5 +1,12 @@
-import React from "react";
-
-export default function LanguageBarChart() {
-  return <div></div>;
+// frontend/src/components/common/Footer.jsx
+function Footer() {
+  return (
+    <footer className="bg-gray-800 text-white p-4 mt-auto">
+      <div className="container mx-auto text-center">
+        &copy; 2023 Library Management System
+      </div>
+    </footer>
+  );
 }
+
+export default Footer;

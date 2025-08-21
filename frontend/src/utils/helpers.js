@@ -1,5 +1,4 @@
-import React from "react";
+// frontend/src/utils/helpers.js
+export const formatDate = (date) => new Date(date).toLocaleDateString();
 
-export default function helpers() {
-  return <div></div>;
-}
+// Add other helper functions as needed

@@ -1,7 +1,7 @@
 import React from "react";
 
-function AuthContext() {
+function NotFound() {
   return <div></div>;
 }
 
-export default AuthContext;
+export default NotFound;

@@ -1,7 +1,5 @@
 import React from "react";
 
-function Card() {
+export default function UserPanel() {
   return <div></div>;
 }
-
-export default Card;

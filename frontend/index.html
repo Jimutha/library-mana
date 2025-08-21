@@ -1,12 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>Library Manager</title>
+
+    <!-- Tailwind CSS via CDN (inline) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.10/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Recharts needs this for responsive containers (no extra CSS needed) -->
   </head>
-  <body>
+  <body class="bg-gray-50">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

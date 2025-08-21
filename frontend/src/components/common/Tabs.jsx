@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function Tabs({ tabs, activeTab, setActiveTab }) {
+const Tabs = ({ tabs, defaultTab, onTabChange }) => {
+  const [activeTab, setActiveTab] = useState(defaultTab || 0);
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+    if (onTabChange) onTabChange(index);
+  };
+
   return (
-    <div className="flex space-x-2 mb-4">
-      {tabs.map((tab) => (
-        <button
-          key={tab}
-          className={`px-3 py-1 rounded ${
-            activeTab === tab ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
-          onClick={() => setActiveTab(tab)}
-        >
-          {tab}
-        </button>
-      ))}
+    <div>
+      <div className="border-b border-gray-200">
+        <div className="flex space-x-8">
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              className={`py-4 px-1 text-sm font-medium border-b-2 transition-colors ${
+                index === activeTab
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              }`}
+              onClick={() => handleTabClick(index)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="mt-4">{tabs[activeTab].content}</div>
     </div>
   );
-}
+};
+
+export default Tabs;

@@ -1,10 +1,16 @@
 import React from "react";
 
-export default function Card({ title, children }) {
+const Card = ({ children, className = "", onClick }) => {
   return (
-    <div className="bg-white shadow rounded p-4">
-      <h3 className="font-bold text-lg mb-2">{title}</h3>
-      <div>{children}</div>
+    <div
+      className={`bg-white rounded-lg shadow-md p-6 ${className} ${
+        onClick ? "cursor-pointer hover:shadow-lg transition-shadow" : ""
+      }`}
+      onClick={onClick}
+    >
+      {children}
     </div>
   );
-}
+};
+
+export default Card;

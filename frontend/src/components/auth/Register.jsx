@@ -1,75 +1,136 @@
 import React, { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import api from "../../services/api";
 
-export default function Register() {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+const Register = () => {
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setUserData({
+      ...userData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await api.post("/auth/register", form);
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      setError("Registration failed");
+    setLoading(true);
+    setError("");
+
+    // Validate passwords match
+    if (userData.password !== userData.confirmPassword) {
+      setError("Passwords don't match");
+      setLoading(false);
+      return;
     }
+
+    const result = await register(userData);
+
+    if (result.success) {
+      navigate("/user");
+    } else {
+      setError(result.message);
+    }
+
+    setLoading(false);
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow bg-white">
-      <h2 className="text-xl font-bold mb-4">Register</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded"
-        >
-          Register
-        </button>
-      </form>
-      <p className="mt-4 text-sm">
-        Already have an account?{" "}
-        <button
-          onClick={() => navigate("/login")}
-          className="text-blue-600 underline"
-        >
-          Login
-        </button>
-      </p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create your account
+          </h2>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+          <div className="rounded-md shadow-sm space-y-4">
+            <div>
+              <input
+                name="name"
+                type="text"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Full Name"
+                value={userData.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <input
+                name="email"
+                type="email"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Email address"
+                value={userData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <input
+                name="password"
+                type="password"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Password"
+                value={userData.password}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <input
+                name="confirmPassword"
+                type="password"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Confirm Password"
+                value={userData.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              {loading ? <div className="loading-spinner"></div> : "Register"}
+            </button>
+          </div>
+
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+              <a
+                href="/login"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Sign in here
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default Register;

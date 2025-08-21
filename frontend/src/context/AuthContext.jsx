@@ -15,7 +15,17 @@ export const AuthProvider = ({ children }) => {
     const userData = localStorage.getItem("user");
 
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+
+      // Redirect based on role if already logged in
+      if (window.location.pathname === "/") {
+        if (parsedUser.role === "admin") {
+          window.location.href = "/admin";
+        } else {
+          window.location.href = "/user";
+        }
+      }
     }
     setLoading(false);
   }, []);
@@ -59,6 +69,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     authAPI.logout();
     setUser(null);
+    window.location.href = "/";
   };
 
   const value = {

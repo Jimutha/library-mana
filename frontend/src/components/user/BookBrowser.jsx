@@ -1,3 +1,4 @@
+// src/components/user/BookBrowser.jsx
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import Card from "../common/Card";
@@ -74,7 +75,7 @@ const BookBrowser = ({ language, category, onBookSelect }) => {
               >
                 <h3 className="text-lg font-semibold mb-2">{book.title}</h3>
                 <p className="text-gray-600 mb-2">by {book.author}</p>
-                <p className="mb-2">Language: {book.language}</p>
+                <p className="mb-2">Language: {book.bookLanguage}</p>
                 <p className="capitalize mb-2">Category: {book.category}</p>
                 <p className="font-semibold text-green-600">
                   {book.copiesAvailable} available

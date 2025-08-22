@@ -1,3 +1,4 @@
+// controllers/analyticsController.js
 import asyncHandler from "express-async-handler";
 import Loan from "../models/Loan.js";
 
@@ -32,7 +33,7 @@ export const overview = asyncHandler(async (req, res) => {
       },
     },
     { $unwind: "$book" },
-    { $group: { _id: "$book.language", count: { $sum: 1 } } },
+    { $group: { _id: "$book.bookLanguage", count: { $sum: 1 } } },
     { $project: { _id: 0, language: "$_id", count: 1 } },
   ]);
 

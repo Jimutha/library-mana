@@ -5,7 +5,7 @@ export const CATEGORIES = [
   "novel",
   "mystery",
   "fantasy",
-  "comedy",
+  "comedy", // Changed from "commody" to "comedy"
   "education",
   "kids",
   "other",

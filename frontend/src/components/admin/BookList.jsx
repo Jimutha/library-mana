@@ -1,3 +1,4 @@
+// src/components/admin/BookList.jsx
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import Card from "../common/Card";
@@ -137,7 +138,7 @@ const BookList = () => {
                 <h3 className="text-lg font-semibold mb-2">{book.title}</h3>
                 <p className="text-gray-600 mb-2">by {book.author}</p>
                 <p className="capitalize mb-2">Category: {book.category}</p>
-                <p className="mb-2">Language: {book.language}</p>
+                <p className="mb-2">Language: {book.bookLanguage}</p>
                 <p
                   className={`font-semibold mb-4 ${
                     book.copiesAvailable > 0 ? "text-green-600" : "text-red-600"

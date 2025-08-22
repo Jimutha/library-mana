@@ -1,3 +1,4 @@
+// seed/seedData.js
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import connectDB from "../config/db.js";
@@ -56,7 +57,7 @@ const run = async () => {
     {
       title: "The Hidden Temple",
       author: "A. Silva",
-      language: "Sinhala",
+      bookLanguage: "Sinhala",
       category: "adventure",
       copiesTotal: 3,
       copiesAvailable: 3,
@@ -65,7 +66,7 @@ const run = async () => {
     {
       title: "Space Beyond",
       author: "N. Perera",
-      language: "English",
+      bookLanguage: "English",
       category: "science fiction",
       copiesTotal: 2,
       copiesAvailable: 2,
@@ -74,7 +75,7 @@ const run = async () => {
     {
       title: "Little Learners",
       author: "K. Fernando",
-      language: "Other",
+      bookLanguage: "Other",
       category: "kids",
       copiesTotal: 4,
       copiesAvailable: 4,

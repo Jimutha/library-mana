@@ -1,3 +1,4 @@
+// src/components/admin/Inventory.jsx
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import { LANGUAGES, CATEGORIES } from "../../utils/constants";
@@ -62,7 +63,7 @@ const Inventory = () => {
       label: "Sinhala",
       content: (
         <BookList
-          books={books.filter((book) => book.language === "Sinhala")}
+          books={books.filter((book) => book.bookLanguage === "Sinhala")}
           loading={loading}
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -76,7 +77,7 @@ const Inventory = () => {
       label: "English",
       content: (
         <BookList
-          books={books.filter((book) => book.language === "English")}
+          books={books.filter((book) => book.bookLanguage === "English")}
           loading={loading}
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -90,7 +91,7 @@ const Inventory = () => {
       label: "Other Languages",
       content: (
         <BookList
-          books={books.filter((book) => book.language === "Other")}
+          books={books.filter((book) => book.bookLanguage === "Other")}
           loading={loading}
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -194,7 +195,7 @@ const BookList = ({
             <h3 className="text-lg font-semibold mb-2">{book.title}</h3>
             <p className="text-gray-600 mb-2">by {book.author}</p>
             <p className="capitalize mb-2">Category: {book.category}</p>
-            <p className="mb-2">Language: {book.language}</p>
+            <p className="mb-2">Language: {book.bookLanguage}</p>
             <p
               className={`font-semibold ${
                 book.copiesAvailable > 0 ? "text-green-600" : "text-red-600"

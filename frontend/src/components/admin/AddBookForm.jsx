@@ -6,8 +6,8 @@ const AddBookForm = ({ onBookAdded }) => {
   const [formData, setFormData] = useState({
     title: "",
     author: "",
-    language: "English",
-    category: "comedy",
+    language: "English", // Default language
+    category: "comedy", // Default category
     copiesTotal: 1,
     description: "",
   });
@@ -15,10 +15,9 @@ const AddBookForm = ({ onBookAdded }) => {
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -28,21 +27,17 @@ const AddBookForm = ({ onBookAdded }) => {
     setMessage("");
 
     try {
-      // Prepare the data exactly as the backend expects it
-      const bookData = {
-        title: formData.title.trim(),
-        author: formData.author.trim(),
-        language: formData.language,
-        category: formData.category,
+      // Ensure language and category are properly formatted
+      const submitData = {
+        ...formData,
         copiesTotal: parseInt(formData.copiesTotal),
-        description: formData.description.trim(),
+        language: formData.language.trim(),
+        category: formData.category.trim(),
       };
 
-      console.log("Sending book data:", bookData);
-
-      const response = await api.post("/books", bookData);
-      console.log("Book added successfully:", response.data);
-
+      console.log("Submitting book data:", submitData); // Debug log
+      const response = await api.post("/books", submitData);
+      console.log("Server response:", response.data); // Log full response
       setMessage("Book added successfully!");
       setFormData({
         title: "",
@@ -52,38 +47,14 @@ const AddBookForm = ({ onBookAdded }) => {
         copiesTotal: 1,
         description: "",
       });
-
       if (onBookAdded) onBookAdded();
     } catch (error) {
-      console.error("Full error details:", error);
-
-      // Extract the actual error message from the backend
-      let errorMessage = "Unknown error occurred";
-
-      if (error.response) {
-        // The server responded with an error status
-        console.error("Server response:", error.response);
-
-        if (error.response.data && error.response.data.error) {
-          errorMessage =
-            error.response.data.error.message ||
-            JSON.stringify(error.response.data.error);
-        } else if (error.response.data) {
-          errorMessage = JSON.stringify(error.response.data);
-        } else {
-          errorMessage = `Server error: ${error.response.status} ${error.response.statusText}`;
-        }
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.request);
-        errorMessage =
-          "No response from server. Please check if the backend is running.";
-      } else {
-        // Something happened in setting up the request
-        console.error("Request setup error:", error.message);
-        errorMessage = error.message;
-      }
-
+      console.error("Error adding book:", error);
+      const errorMessage =
+        error.response?.data?.error?.message ||
+        error.message ||
+        "Unknown server error";
+      console.error("Full error details:", error.response?.data || error); // Detailed error log
       setMessage(`Error adding book: ${errorMessage}`);
     } finally {
       setLoading(false);
@@ -98,8 +69,8 @@ const AddBookForm = ({ onBookAdded }) => {
         <div
           className={`mb-4 p-3 rounded ${
             message.includes("Error")
-              ? "bg-red-100 text-red-700 border border-red-300"
-              : "bg-green-100 text-green-700 border border-green-300"
+              ? "bg-red-100 text-red-700"
+              : "bg-green-100 text-green-700"
           }`}
         >
           {message}
@@ -109,7 +80,7 @@ const AddBookForm = ({ onBookAdded }) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title *
+            Title
           </label>
           <input
             type="text"
@@ -117,14 +88,13 @@ const AddBookForm = ({ onBookAdded }) => {
             value={formData.title}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter book title"
+            className="w-full px-3 py-2 border rounded-md"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Author *
+            Author
           </label>
           <input
             type="text"
@@ -132,22 +102,20 @@ const AddBookForm = ({ onBookAdded }) => {
             value={formData.author}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter author name"
+            className="w-full px-3 py-2 border rounded-md"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Language *
+              Language
             </label>
             <select
               name="language"
               value={formData.language}
               onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md"
             >
               {LANGUAGES.map((lang) => (
                 <option key={lang} value={lang}>
@@ -159,14 +127,13 @@ const AddBookForm = ({ onBookAdded }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category *
+              Category
             </label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -179,7 +146,7 @@ const AddBookForm = ({ onBookAdded }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Number of Copies *
+            Number of Copies
           </label>
           <input
             type="number"
@@ -188,7 +155,7 @@ const AddBookForm = ({ onBookAdded }) => {
             onChange={handleChange}
             min="1"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md"
           />
         </div>
 
@@ -201,24 +168,16 @@ const AddBookForm = ({ onBookAdded }) => {
             value={formData.description}
             onChange={handleChange}
             rows="3"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter book description (optional)"
+            className="w-full px-3 py-2 border rounded-md"
           ></textarea>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? (
-            <>
-              <div className="loading-spinner mr-2"></div>
-              Adding Book...
-            </>
-          ) : (
-            "Add Book"
-          )}
+          {loading ? "Adding Book..." : "Add Book"}
         </button>
       </form>
     </div>

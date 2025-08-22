@@ -1,10 +1,11 @@
+// controllers/bookController.js
 import asyncHandler from "express-async-handler";
 import Book from "../models/Book.js";
 
 export const listBooks = asyncHandler(async (req, res) => {
   const { language, category, q, status, page = 1, limit = 12 } = req.query;
   const filter = {};
-  if (language) filter.language = language;
+  if (language) filter.bookLanguage = language;
   if (category) filter.category = category;
   if (q) filter.$text = { $search: q };
   if (status === "available") filter.copiesAvailable = { $gt: 0 };
@@ -39,20 +40,33 @@ export const createBook = asyncHandler(async (req, res) => {
     copiesTotal = 1,
     description = "",
   } = req.body;
-  const book = await Book.create({
-    title,
-    author,
-    language,
-    category,
-    copiesTotal,
-    copiesAvailable: copiesTotal,
-    description,
-  });
-  res.status(201).json({ success: true, data: book });
+  try {
+    const book = await Book.create({
+      title,
+      author,
+      bookLanguage: language,
+      category,
+      copiesTotal,
+      copiesAvailable: copiesTotal,
+      description,
+    });
+    res.status(201).json({ success: true, data: book });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res.status(400);
+      throw new Error(`Validation error: ${error.message}`);
+    }
+    res.status(500);
+    throw new Error("Failed to create book due to server error");
+  }
 });
 
 export const updateBook = asyncHandler(async (req, res) => {
   const updates = { ...req.body };
+  if (updates.language) {
+    updates.bookLanguage = updates.language;
+    delete updates.language;
+  }
   if (updates.copiesTotal != null) {
     const current = await Book.findById(req.params.id);
     if (!current) {

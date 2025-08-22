@@ -1,3 +1,4 @@
+// src/components/user/BookDetails.jsx
 import React, { useState } from "react";
 import api from "../../services/api";
 import { DURATIONS } from "../../utils/constants";
@@ -59,7 +60,8 @@ const BookDetails = ({ book, onBorrowSuccess, onBack }) => {
             <h2 className="text-lg font-semibold mb-2">Book Details</h2>
             <div className="space-y-2">
               <p>
-                <span className="font-medium">Language:</span> {book.language}
+                <span className="font-medium">Language:</span>{" "}
+                {book.bookLanguage}
               </p>
               <p className="capitalize">
                 <span className="font-medium">Category:</span> {book.category}

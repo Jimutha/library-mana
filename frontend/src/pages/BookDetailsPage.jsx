@@ -1,3 +1,4 @@
+// src/pages/BookDetailsPage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
@@ -61,7 +62,8 @@ const BookDetailsPage = () => {
             <h2 className="text-lg font-semibold mb-2">Book Details</h2>
             <div className="space-y-2">
               <p>
-                <span className="font-medium">Language:</span> {book.language}
+                <span className="font-medium">Language:</span>{" "}
+                {book.bookLanguage}
               </p>
               <p className="capitalize">
                 <span className="font-medium">Category:</span> {book.category}

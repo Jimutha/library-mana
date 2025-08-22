@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { authAPI } from "../services/auth";
+import api from "../services/api"; // For member creation API call
 
 // Create and export the context
 export const AuthContext = createContext();
@@ -53,6 +54,7 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.register(userData);
       const { token, ...userInfo } = response.data.data;
 
+      // No direct member creation here; backend will handle it
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userInfo));
       setUser(userInfo);

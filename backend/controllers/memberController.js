@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Member from "../models/Member.js";
-import Loan from "../models/Loan.js";
 
 export const listMembers = asyncHandler(async (req, res) => {
   const members = await Member.find().sort({ createdAt: -1 });
@@ -17,13 +16,20 @@ export const getMember = asyncHandler(async (req, res) => {
 });
 
 export const createMember = asyncHandler(async (req, res) => {
-  const { memberId, name, email, phone, address } = req.body;
+  const { memberId, name, email, phone, address, userId } = req.body;
   const exists = await Member.findOne({ memberId });
   if (exists) {
     res.status(400);
     throw new Error("memberId already exists");
   }
-  const member = await Member.create({ memberId, name, email, phone, address });
+  const member = await Member.create({
+    memberId,
+    name,
+    email,
+    phone,
+    address,
+    userId,
+  });
   res.status(201).json({ success: true, data: member });
 });
 
@@ -44,6 +50,6 @@ export const deleteMember = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Member not found");
   }
-  await Loan.deleteMany({ memberId: member._id });
+  // Removed Loan dependency since we're using userId
   res.json({ success: true, data: { _id: member._id } });
 });

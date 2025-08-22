@@ -1,28 +1,34 @@
-// src/components/user/BookDetails.jsx
 import React, { useState } from "react";
 import api from "../../services/api";
 import { DURATIONS } from "../../utils/constants";
 import { calculateDueDate } from "../../utils/helpers";
+import { useAuth } from "../../hooks/useAuth";
 
 const BookDetails = ({ book, onBorrowSuccess, onBack }) => {
   const [selectedDuration, setSelectedDuration] = useState(DURATIONS[0]);
   const [borrowing, setBorrowing] = useState(false);
   const [message, setMessage] = useState("");
+  const { user } = useAuth(); // Get authenticated user
 
   const handleBorrow = async () => {
     setBorrowing(true);
     setMessage("");
 
-    try {
-      // In a real app, you would get the member ID from the user context
-      // For this demo, we'll use a hardcoded member ID
-      const memberId = "MBR-0001"; // This should come from user context
+    if (!user) {
+      setMessage("Please log in to borrow a book.");
+      setBorrowing(false);
+      return;
+    }
 
-      await api.post("/loans", {
+    try {
+      console.log("Borrowing with userId:", user._id); // Debug log
+
+      const response = await api.post("/loans", {
         bookId: book._id,
-        memberId: memberId,
+        userId: user._id, // Use authenticated user ID
         durationDays: selectedDuration,
       });
+      console.log("Borrow response:", response.data); // Debug log
 
       const dueDate = calculateDueDate(selectedDuration);
       setMessage(
@@ -33,9 +39,12 @@ const BookDetails = ({ book, onBorrowSuccess, onBack }) => {
         onBorrowSuccess();
       }
     } catch (error) {
+      console.error("Borrow error details:", error.response?.data || error); // Detailed error log
       setMessage(
         "Error borrowing book: " +
-          (error.response?.data?.error?.message || "Unknown error")
+          (error.response?.data?.error?.message ||
+            error.message ||
+            "Unknown error")
       );
     } finally {
       setBorrowing(false);

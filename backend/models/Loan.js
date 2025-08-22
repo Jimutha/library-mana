@@ -7,9 +7,10 @@ const loanSchema = new mongoose.Schema(
       ref: "Book",
       required: true,
     },
-    memberId: {
+    userId: {
+      // Changed from memberId to userId
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Member",
+      ref: "User",
       required: true,
     },
     borrowedAt: { type: Date, default: () => new Date() },

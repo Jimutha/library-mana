@@ -1,14 +1,14 @@
 import asyncHandler from "express-async-handler";
 import Loan from "../models/Loan.js";
 import Book from "../models/Book.js";
-import Member from "../models/Member.js";
+import User from "../models/User.js"; // Added User import
 import { DURATIONS } from "../utils/constants.js";
 
 export const listLoans = asyncHandler(async (req, res) => {
-  const { status, memberId, bookId, overdue } = req.query;
+  const { status, userId, bookId, overdue } = req.query;
   const filter = {};
   if (status) filter.status = status;
-  if (memberId) filter.memberId = memberId;
+  if (userId) filter.userId = userId;
   if (bookId) filter.bookId = bookId;
   if (overdue === "true") {
     filter.status = "BORROWED";
@@ -16,30 +16,33 @@ export const listLoans = asyncHandler(async (req, res) => {
   }
   const loans = await Loan.find(filter)
     .populate("bookId")
-    .populate("memberId")
+    .populate("userId")
     .sort({ createdAt: -1 });
   res.json({ success: true, data: loans });
 });
 
-// POST /api/loans  Body: { bookId, memberId, durationDays }
+// POST /api/loans  Body: { bookId, userId, durationDays }
 export const borrow = asyncHandler(async (req, res) => {
-  const { bookId, memberId, durationDays } = req.body;
+  const { bookId, userId, durationDays } = req.body; // Changed from customMemberId to userId
 
+  console.log("Borrow request received:", { bookId, userId, durationDays }); // Debug log
   if (!DURATIONS.includes(Number(durationDays))) {
     res.status(400);
     throw new Error("Invalid duration");
   }
-  const [book, member] = await Promise.all([
+  const [book, user] = await Promise.all([
     Book.findById(bookId),
-    Member.findById(memberId),
+    User.findById(userId).lean(), // Use User model directly
   ]);
+  console.log("Found book:", book); // Debug log
+  console.log("Found user:", user); // Debug log
   if (!book) {
     res.status(404);
     throw new Error("Book not found");
   }
-  if (!member) {
+  if (!user) {
     res.status(404);
-    throw new Error("Member not found");
+    throw new Error("User not found");
   }
   if (book.copiesAvailable <= 0) {
     res.status(409);
@@ -53,7 +56,7 @@ export const borrow = asyncHandler(async (req, res) => {
   session.startTransaction();
   try {
     const loan = await Loan.create(
-      [{ bookId, memberId, borrowedAt: now, dueAt }],
+      [{ bookId, userId, borrowedAt: now, dueAt }],
       { session }
     );
     book.copiesAvailable -= 1;

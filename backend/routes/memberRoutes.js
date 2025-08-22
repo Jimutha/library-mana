@@ -10,10 +10,10 @@ import { protect, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Members are managed by admin
+// Allow non-admins to create their own member on registration
 router.get("/", protect, adminOnly, listMembers);
 router.get("/:id", protect, adminOnly, getMember);
-router.post("/", protect, adminOnly, createMember);
+router.post("/", protect, createMember); // Removed adminOnly for registration
 router.put("/:id", protect, adminOnly, updateMember);
 router.delete("/:id", protect, adminOnly, deleteMember);
 

@@ -1,6 +1,6 @@
-// controllers/analyticsController.js
 import asyncHandler from "express-async-handler";
 import Loan from "../models/Loan.js";
+import User from "../models/User.js"; // Added User import
 
 // GET /api/analytics/overview
 export const overview = asyncHandler(async (req, res) => {
@@ -75,11 +75,14 @@ export const dueSoon = asyncHandler(async (req, res) => {
     dueAt: { $gte: now, $lte: to },
   })
     .populate("bookId")
-    .populate("memberId")
-    .sort({ dueAt: 1 });
+    .populate({
+      path: "userId",
+      select: "name", // Select only name from User
+    })
+    .sort({ dueAt: 1 }); // Ensure sorting by due date (closest to furthest)
 
   const list = loans.map((l) => ({
-    memberName: l.memberId?.name,
+    memberName: l.userId?.name || "Unknown User", // Use user name instead of member
     bookTitle: l.bookId?.title,
     dueAt: l.dueAt,
   }));

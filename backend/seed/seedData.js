@@ -1,4 +1,3 @@
-// seed/seedData.js
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import connectDB from "../config/db.js";
@@ -27,7 +26,7 @@ const run = async () => {
       role: "admin",
     },
     {
-      name: "User One",
+      name: "Jimutha Ranawaka", // Updated to reflect a realistic user name
       email: "user@example.com",
       password: "user123",
       role: "user",
@@ -42,6 +41,7 @@ const run = async () => {
       email: "jane@example.com",
       phone: "+94 11 111 1111",
       address: "Colombo",
+      userId: admin._id, // Link to admin user
     },
     {
       memberId: "MBR-0002",
@@ -49,6 +49,7 @@ const run = async () => {
       email: "john@example.com",
       phone: "+94 77 222 3333",
       address: "Kandy",
+      userId: user._id, // Link to user
     },
   ]);
 
@@ -85,7 +86,7 @@ const run = async () => {
 
   console.log("✅ Seeded:");
   console.log("- Admin: admin@example.com / admin123");
-  console.log("- User:  user@example.com / user123");
+  console.log("- User: user@example.com / user123");
   console.log("- Members: MBR-0001, MBR-0002");
   console.log("- Books: 3 sample books");
 

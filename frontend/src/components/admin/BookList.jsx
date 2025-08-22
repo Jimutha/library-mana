@@ -22,6 +22,10 @@ const BookList = () => {
       setTotalPages(Math.ceil(response.data.data.total / 12));
     } catch (error) {
       console.error("Error fetching books:", error);
+      alert(
+        "Error fetching books: " +
+          (error.response?.data?.error?.message || error.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -35,7 +39,10 @@ const BookList = () => {
       fetchBooks(); // Refresh the list
     } catch (error) {
       console.error("Error deleting book:", error);
-      alert("Error deleting book");
+      alert(
+        "Error deleting book: " +
+          (error.response?.data?.error?.message || error.message)
+      );
     }
   };
 
@@ -55,7 +62,10 @@ const BookList = () => {
       fetchBooks(); // Refresh the list
     } catch (error) {
       console.error("Error updating book:", error);
-      alert("Error updating book");
+      alert(
+        "Error updating book: " +
+          (error.response?.data?.error?.message || error.message)
+      );
     }
   };
 
@@ -88,12 +98,14 @@ const BookList = () => {
                   value={editForm.title}
                   onChange={(e) => handleEditChange("title", e.target.value)}
                   className="w-full px-2 py-1 border rounded"
+                  placeholder="Title"
                 />
                 <input
                   type="text"
                   value={editForm.author}
                   onChange={(e) => handleEditChange("author", e.target.value)}
                   className="w-full px-2 py-1 border rounded"
+                  placeholder="Author"
                 />
                 <input
                   type="number"
@@ -102,6 +114,7 @@ const BookList = () => {
                     handleEditChange("copiesTotal", e.target.value)
                   }
                   className="w-full px-2 py-1 border rounded"
+                  placeholder="Copies"
                   min="0"
                 />
                 <div className="flex space-x-2">
